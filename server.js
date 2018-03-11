@@ -33,18 +33,78 @@ mongoose.Promise = Promise;
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 mongoose.connect(MONGODB_URI, {});
 
-app.get("/test", function(req, res) {
-  // TODO: Finish the route so it grabs all of the articles
-  db.Headline.create({'headline': 'test'}, function(err, articles){
-    if (err) {
-      res.json(err)
-    }else{
-      res.json(articles);
-    }
+// https://medium.com/
+
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+app.get("/scrape", function(req, res) {
+  // First, we grab the body of the html with request
+	  axios.get("https://techcrunch.com/startups/").then(function(response) {
+	    // Then, we load that into cheerio and save it to $ for a shorthand selector
+
+		    var $ = cheerio.load(response.data);
+		     var results = [];
+
+
+		    // console.log(response.data)
+
+		    // Now, we grab every h2 within an article tag, and do the following:
+		    $("li.river-block").each(function(i, element) {
+		      // Save an empty result object
+		      
+		      // console.log(element);
+		     
+
+		      
+		      // Add the text and href of every link, and save them as properties of the result object
+		      results.push({
+
+		      	headline : $(element).find("h2.post-title").text().trim(),
+		      	link : $(element).find("a").attr("href"),
+		      	body: $(element).find("p.excerpt").text().trim()
+
+		      })
+		      
+		      	console.log('success!!!', results)
+
+		      // Create a new Article using the `result` object built from scraping
+		    //   db.Headline.create(result)
+		    //     .then(function(dbArticle) {
+		    //       // View the added result in the console
+		    //       console.log(dbArticle);
+		    //     })
+		    //     .catch(function(err) {
+		    //       // If an error occurred, send it to the client
+		    //       return res.json(err);
+		    //     });
+		   	 
+		    });
+
+		    res.send(results);
+
+		 
+
+		    // If we were able to successfully scrape and save an Article, send a message to the client
+		    
+	  })
+});
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+//***************Saving to DB snippet************************
+
+// app.get("/test", function(req, res) {
+//   // TODO: Finish the route so it grabs all of the articles
+//   db.Headline.create({'headline': 'test', }, function(err, articles){
+//     if (err) {
+//       res.json(err)
+//     }else{
+//       res.json(articles);
+//     }
     
 
-  })
-});
+//   })
+// });
 
 // Start the server
 app.listen(PORT, function() {
