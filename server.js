@@ -35,36 +35,42 @@ mongoose.connect(MONGODB_URI, {});
 
 // https://medium.com/
 
+app.get("/", (req, res) => {
+	        res.sendFile(path.join(__dirname, "./public/index.html"));
+	    });
+
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-app.get("/scrape", function(req, res) {
-  // First, we grab the body of the html with request
-	  axios.get("https://techcrunch.com/startups/").then(function(response) {
-	    // Then, we load that into cheerio and save it to $ for a shorthand selector
+//scraping method
+app.get("/scrape", function(req, res){
+    console.log("Scraping!");
+    var results = [];
+    var npr = "https://www.npr.org/sections/national/"
+    axios.get(npr).then(function(response) {
+        
+        // Load the HTML into cheerio and save it to a variable
+        // '$' becomes a shorthand for cheerio's selector commands, much like jQuery's '$'
+        var $ = cheerio.load(response.data);
+        // console.log(response.data)
+        
+        // An empty array to save the data that we'll scrape
+        var results = [];
 
-		    var $ = cheerio.load(response.data);
-		     var results = [];
+        var parentSelector = "article.item";
 
+        // // Select each element in the HTML body from which you want information.
+        // // NOTE: Cheerio selectors function similarly to jQuery's selectors,
+        // // but be sure to visit the package's npm page to see how it works
+        $(parentSelector).each(function(i, element) {
 
-		    // console.log(response.data)
-
-		    // Now, we grab every h2 within an article tag, and do the following:
-		    $("li.river-block").each(function(i, element) {
-		      // Save an empty result object
+        //     // Save these results in an object that we'll push into the results array we defined earlier
+            results.push({
+                link: $(element).find("a").attr("href"),
+                title: $(element).find("h2.title").text(),
+                blurb: $(element).find("p.teaser").text(),
+            })
+        });
 		      
-		      // console.log(element);
-		     
-
-		      
-		      // Add the text and href of every link, and save them as properties of the result object
-		      results.push({
-
-		      	headline : $(element).find("h2.post-title").text().trim(),
-		      	link : $(element).find("a").attr("href"),
-		      	body: $(element).find("p.excerpt").text().trim()
-
-		      })
-		      
-		      	console.log('success!!!', results)
+		      	// console.log('success!!!', results)
 
 		      // Create a new Article using the `result` object built from scraping
 		    //   db.Headline.create(result)
@@ -77,10 +83,10 @@ app.get("/scrape", function(req, res) {
 		    //       return res.json(err);
 		    //     });
 		   	 
-		    });
+		  
 
 		    res.send(results);
-
+		    // res.redirect("/");
 		 
 
 		    // If we were able to successfully scrape and save an Article, send a message to the client
