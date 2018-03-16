@@ -1,7 +1,9 @@
 var express = require("express");
+var path = require('path');
 var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
+var hbs = require('express-handlebars');
 
 // Our scraping tools
 // Axios is a promised-based http library, similar to jQuery's Ajax method
@@ -16,15 +18,21 @@ var PORT = 3000;
 
 // Initialize Express
 var app = express();
+const routes = require("./routes");
+
+app.use(routes);
 
 // Configure middleware
+app.set('views', path.join(__dirname, './views'));
+app.engine('hbs', hbs({extname: '.hbs', defaultLayout: 'main'}))
+app.set('view engine', 'hbs');
 
 // Use morgan logger for logging requests
 app.use(logger("dev"));
 // Use body-parser for handling form submissions
 app.use(bodyParser.urlencoded({ extended: true }));
 // Use express.static to serve the public folder as a static directory
-app.use(express.static("public"));
+
 
 // By default mongoose uses callbacks for async queries, we're setting it to use promises (.then syntax) instead
 // Connect to the Mongo DB
@@ -35,9 +43,9 @@ mongoose.connect(MONGODB_URI, {});
 
 // https://medium.com/
 
-app.get("/", (req, res) => {
-	        res.sendFile(path.join(__dirname, "./public/index.html"));
-	    });
+// app.get("/", (req, res) => {
+// 	        res.render('index');
+// 	    });
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 //scraping method
@@ -85,7 +93,7 @@ app.get("/scrape", function(req, res){
 		   	 
 		  
 
-		    res.send(results);
+		    res.render('index', {title: 'NPR news scraper!', results});
 		    // res.redirect("/");
 		 
 
