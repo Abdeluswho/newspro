@@ -139,7 +139,7 @@ app.get('/saved', function(req, res) {
         // results = 
             // console.log("/saved", results);
             
-            res.render('saved', {title: 'Your -*NPR*- saved Articles!', results, message: "DB Articles"});
+            res.render('saved', {title: 'Your npr --saved Articles!', results, message: "DB Articles"});
 
         })   
 })
@@ -154,20 +154,21 @@ app.post('/delete/:id', function(req, res) {
                 console.log("DELETE ERR", err)
                 
             } else {
-                console.log("Success", doc);
+                console.log("ELEMENT DELETED", doc);
                 res.redirect("/saved")
             }
       })
-    //     .then(function(dbarticle) {
-    //       // View the added result in the console
-    //       console.log("You saved it babe!", dbarticle);
-          
-    //     })
-    //     .catch(function(err) {
-    //       // If an error occurred, send it to the client
-    //       return res.json(err);
-    //     });   
 })
+
+app.post("/articles", function(req, res){
+    console.log("/articles", req.body);
+    res.redirect("/saved")
+})
+
+app.get("/articles/:id", function(req, res){
+    var id = req.params.id;
+    console.log("NOTE ID ", id);
+}) 
 
 
 
