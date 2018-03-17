@@ -1,0 +1,87 @@
+{{!-- <div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jumbotron">
+          {{message}}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{#each results}}
+        <div class="panel panel-primary">
+          <div class="panel-heading row">
+            <div class="col-xs-9">
+              <h3 class="panel-title pull-left">{{this.title}}</h3>
+            </div>
+            <div class="col-xs-3">
+              <form action="/" method="POST">
+                <input id="article-title" type="hidden" name="title" value="{{this.title}}">
+                <input id="article-link" type="hidden" name="link" value={{this.link}}>
+                <input id="article-blurb" type="hidden" name="blurb" value="{{this.blurb}}">
+                <button type="submit" class="btn btn-default pull-right">Delete</button>
+                <button id="modalbutton" type="submit" class="btn btn-default pull-right" data-toggle="modal" data-id={{this.id}} data-target="#myModal">ARTICLE NOTES</button>
+              </form>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12>">
+              <div class="panel-body">
+                <p>{{this.blurb}}</p>
+                <a>{{this.link}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</div> --}}
+
+{{!-- ******** --}}
+<!-- Main container -->
+<div class="container">  
+  <div class="row">
+    <div class="col-md-12">
+      {{#each results}}
+        <div class="panel panel-primary">
+          <div class="panel-heading row">
+            <div class="col-xs-6">
+              <h3 class="panel-title pull-left">{{this.title}}</h3>
+            </div>
+            <div class="col-xs-6">
+              <button id="modalbutton" type="submit" class="btn btn-default pull-right" data-toggle="modal" data-id={{this.id}} data-target="#myModal">ARTICLE NOTES</button>
+           
+              <form action="/delete/{{this.id}}" method="POST">
+                <button type="submit" class="btn btn-default pull-right">DELETE</button>
+              </form>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12>">
+              <div class="panel-body">
+                <p>{{this.blurb}}</p>
+                <a>{{this.link}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Notes for Article <span id="articleID"></span></h4>
+      </div>
+      <div class="modal-body">
+        <div id="notes"></div>
+      </div>
+    </div>
+  </div>
+</div>

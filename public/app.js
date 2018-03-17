@@ -8,27 +8,33 @@ $("#cloud").on("click", function(e) {
     url: "/scrape",
     success: function(news){
     	console.log("got data", news);
-
-    	for (var i = 0; i < news.length; i++) {
-    			$("#result").append('<div class="panel panel-default">' +
-		  								'<div class="panel-heading">' +
-		   						 			'<h3 class="panel-title" href="'+ news[i].link +'">'+news[i].title+'</h3>'+
-		 								'</div>'+
-		 								'<div class="panel-body">' + news[i].blurb +'</div>'+
-
-		 							'</div>')
-    	}
-
-    	
-
-	
-
-		
-
 	}
   })
 	
 });
+
+$("#savebtn").on("submit", function(e){
+	e.preventDefault();
+
+	console.log("clicked")
+
+	this.value()= 'saved';
+	// e.this.attr(href="/save", method="POST");	
+
+		// $.ajax({
+		// 	method: "POST",
+		// 	url: "/save",
+		// 	success: function(err){
+		// 		if(err){
+		// 			console.log("POST ERROR", err);
+		// 		}else {
+		// 			console.log("check the DB");
+		// 		}
+
+		// 	}
+		//   })
+
+})
 
 
 

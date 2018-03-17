@@ -72,12 +72,11 @@ app.get("/scrape", function(req, res){
 
         //     // Save these results in an object that we'll push into the results array we defined earlier
             results.push({
-                link: $(element).find("a").attr("href"),
                 title: $(element).find("h2.title").text(),
+                link: $(element).find("a").attr("href"),    
                 blurb: $(element).find("p.teaser").text(),
             })
-        });
-		      
+        });		      
 		      	// console.log('success!!!', results)
 
 		      // Create a new Article using the `result` object built from scraping
@@ -89,10 +88,7 @@ app.get("/scrape", function(req, res){
 		    //     .catch(function(err) {
 		    //       // If an error occurred, send it to the client
 		    //       return res.json(err);
-		    //     });
-		   	 
-		  
-
+		    //     });		   	 		  
 		    res.render('index', {title: 'NPR news scraper!', results});
 		    // res.redirect("/");
 		 
@@ -102,6 +98,76 @@ app.get("/scrape", function(req, res){
 	  })
 });
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+app.post('/save', function(req, res) {
+    
+    var article={
+        headline: req.body.title,
+        link : req.body.link,
+        body: req.body.blurb
+    }
+    // Create a new Article using the `article` collected from save button
+      db.Headline.create(article)
+        .then(function(dbarticle) {
+          // View the added result in the console
+        //   console.log("You saved it babe!", dbarticle);
+          res.redirect("/saved")
+        })
+        .catch(function(err) {
+          // If an error occurred, send it to the client
+          return res.json(err);
+        });   
+})
+
+app.get('/saved', function(req, res) {
+   var results =[];
+     
+    
+    db.Headline.find({}, function(err, article){
+        // console.log("db", article)
+       
+        for (let i = 0; i < article.length; i++) {
+            const element = article[i];
+            results.push({
+                id: element._id,
+                title: element.headline,
+                link: element.link,
+                blurb: element.body
+            })
+            
+        }
+        // results = 
+            // console.log("/saved", results);
+            
+            res.render('saved', {title: 'Your -*NPR*- saved Articles!', results, message: "DB Articles"});
+
+        })   
+})
+
+app.post('/delete/:id', function(req, res) {
+    
+    var id = req.params.id;
+    console.log("ArticleID", id)
+    // // Create a new Article using the `article` collected from save button
+      db.Headline.findOneAndRemove({"_id": id}, function(err, doc){
+            if (err) {
+                console.log("DELETE ERR", err)
+                
+            } else {
+                console.log("Success", doc);
+                res.redirect("/saved")
+            }
+      })
+    //     .then(function(dbarticle) {
+    //       // View the added result in the console
+    //       console.log("You saved it babe!", dbarticle);
+          
+    //     })
+    //     .catch(function(err) {
+    //       // If an error occurred, send it to the client
+    //       return res.json(err);
+    //     });   
+})
 
 
 
