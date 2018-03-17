@@ -160,15 +160,29 @@ app.post('/delete/:id', function(req, res) {
       })
 })
 
-app.post("/articles", function(req, res){
-    console.log("/articles", req.body);
-    res.redirect("/saved")
+app.get("/articles/:id", function(req, res){
+    console.log("/articles", req.params.id);
+    var id = req.params.id;
+
+    db.Headline.findOne({"_id": id}, function(err, doc){
+        console.log("BACK :", doc)
+        res.json(doc);
+    })
+    
+})
+//save data to the note doc
+
+app.post("/articles/:id", function(req, res){
+    console.log("//articles/:id:", req.body);
+    // res.redirect("/saved")
+    res.json(req.body.body)
 })
 
-app.get("/articles/:id", function(req, res){
-    var id = req.params.id;
-    console.log("NOTE ID ", id);
-}) 
+
+// app.get("/article/:id", function(req, res){
+//     var id = req.params.id;
+//     console.log("NOTE ID ", id);
+// }) 
 
 
 
