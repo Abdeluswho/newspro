@@ -173,9 +173,9 @@ app.get("/articles/:id", function(req, res){
 //save data to the note doc
 
 app.post("/articles/:id", function(req, res){
-    console.log("//articles/:id:", req.body);
+    console.log("Note Body", req.body);
     // res.redirect("/saved")
-    res.json(req.body.body)
+    res.json(req.body)
 })
 
 
