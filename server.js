@@ -164,27 +164,61 @@ app.get("/articles/:id", function(req, res){
     console.log("/articles", req.params.id);
     var id = req.params.id;
 
-    db.Headline.findOne({"_id": id}, function(err, doc){
-        console.log("BACK :", doc)
+    db.Headline.findOne({"_id": id})
+    .populate("note")
+    .then(function(doc){
+        console.log("article populated BACK :", doc)
         res.json(doc);
-    })
+    }).catch(function(err){
+        res.json(err)
+      })
     
 })
-//save data to the note doc
-
+//*********************************** */
+// Route for saving a new Note to the db and associating it with the article
 app.post("/articles/:id", function(req, res){
-    console.log("Note Body", req.body);
+    var articleID = req.params.id
     // res.redirect("/saved")
-    res.json(req.body)
+    
+    db.Note.create(req.body)
+    .then(function(dbNote) {
+        console.log("note saved dbNote ", dbNote)
+      // If a Note was created successfully, find one User (there's only one) and push the new Note's _id to the User's `notes` array
+      // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
+      // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
+      return db.Headline.findOneAndUpdate({"_id": articleID }, { $push: { note: dbNote._id } }, { new: true });
+    })
+    .then(function(article) {
+      // If the User was updated successfully, send it back to the client
+      
+      console.log("Note and article success: ", article);
+      res.redirect("/articles")
+    })
+    .catch(function(err) {
+      // If an error occurs, send it back to the client
+      res.json(err);
+    });
+    
 })
 
-
-// app.get("/article/:id", function(req, res){
-//     var id = req.params.id;
-//     console.log("NOTE ID ", id);
-// }) 
-
-
+//*****************  
+  // Route to see what user looks like WITH populating
+  app.get("/articles", function(req, res) {
+    // TODO
+    // =====
+    db.Headline.find({})
+  
+    .populate("note")
+    .then(function(db){
+        console.log(db);
+      res.json(db);
+    })
+    .catch(function(err){
+      res.json(err)
+    })
+    
+  });
+  
 
 //***************Saving to DB snippet************************
 

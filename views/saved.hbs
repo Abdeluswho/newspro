@@ -85,7 +85,7 @@
 $(document).on("click", "#modalbutton", function() {
   // Empty the notes from the note section
   $("#notes").empty();
-  console.log("IAM HEREEEEEEEEE")
+ 
   // Save the id from the button tag
    thisId = $(this).attr("data-id");
   $("#articleID").text(thisId);
@@ -99,11 +99,11 @@ $(document).on("click", "#modalbutton", function() {
       console.log(data);
       // Placeholder for notes
       $("#notes").append("<p id='actualnotes'></p>");
-        if (data.notes) {
+        if (data.note) {
         $("#actualnotes").append("<ul id='notelist'>");
-          for (var i = 0; i < data.notes.length; i++) {
-            $('#notelist').append("<li id='" + data.notes[i]._id + "'>" + data.notes[i].body + " " +
-            "<button data-id='" + data.notes[i]._id +
+          for (var i = 0; i < data.note.length; i++) {
+            $('#notelist').append("<li id='" + data.note[i]._id + "'>" + data.note[i].body + " " +
+            "<button data-id='" + data.note[i]._id +
             "' id='deletenote'>X</button></li>");
           }
         $('#actualnotes').append("</ul>");
