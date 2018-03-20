@@ -47,8 +47,9 @@ mongoose.connect(MONGODB_URI, {});
 // 	        res.render('index');
 // 	    });
 
-//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-//scraping method
+
+//*********************************** */Scraping***************************************************** */
+
 app.get("/scrape", function(req, res){
     console.log("Scraping!");
     var results = [];
@@ -97,7 +98,10 @@ app.get("/scrape", function(req, res){
 		    
 	  })
 });
-//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+//*********************************************End Scraping*************************************************** */
+
+
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$-- Saving Articles--$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 app.post('/save', function(req, res) {
     
@@ -174,8 +178,10 @@ app.get("/articles/:id", function(req, res){
       })
     
 })
-//*********************************** */
-// Route for saving a new Note to the db and associating it with the article
+//$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$-- Saving Articles End--$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+//*********************************** */Note Manager***************************************************** */
+// Route for saving/deleting a new Note to the db and associating it with the article
 app.post("/articles/:id", function(req, res){
     var articleID = req.params.id
     // res.redirect("/saved")
@@ -188,20 +194,42 @@ app.post("/articles/:id", function(req, res){
       // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
       return db.Headline.findOneAndUpdate({"_id": articleID }, { $push: { note: dbNote._id } }, { new: true });
     })
-    .then(function(article) {
-      // If the User was updated successfully, send it back to the client
-      
-      console.log("Note and article success: ", article);
-      res.redirect("/articles")
+    .then(function(article){
+        
+        db.Headline.findOne({"_id": articleID})
+        .populate("note")
+        .then(function(doc){
+            
+            res.json(doc);
+        })
+        
     })
     .catch(function(err) {
       // If an error occurs, send it back to the client
       res.json(err);
     });
     
+    
 })
 
-//*****************  
+app.get('/notes/:id', function(req, res) {
+    
+    var id = req.params.id;
+    console.log("NoteID", id)
+    // // Create a new Article using the `article` collected from save button
+      db.Note.findOneAndRemove({"_id": id}, function(err, doc){
+            if (err) {
+                console.log("DELETE ERR", err)
+                
+            } else {
+               
+                res.json(doc)
+            }
+      })
+})
+//************************************************************************************************ */
+
+//************************************************************************************************ */
   // Route to see what user looks like WITH populating
   app.get("/articles", function(req, res) {
     // TODO
@@ -218,22 +246,10 @@ app.post("/articles/:id", function(req, res){
     })
     
   });
+//************************************************************************************************ */
+  
   
 
-//***************Saving to DB snippet************************
-
-// app.get("/test", function(req, res) {
-//   // TODO: Finish the route so it grabs all of the articles
-//   db.Headline.create({'headline': 'test', }, function(err, articles){
-//     if (err) {
-//       res.json(err)
-//     }else{
-//       res.json(articles);
-//     }
-    
-
-//   })
-// });
 
 // Start the server
 app.listen(PORT, function() {

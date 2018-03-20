@@ -4,17 +4,35 @@
 	<title>{{ title }}</title>
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 </head>
+<style>
+	body {
+		background-image: url("https://c.pxhere.com/photos/3c/1a/flatlay_typewriter_retro_vintage_camera-1410178.jpg!d")
+	}
+	img {
+		margin-top: 0;
+		width: 60px;
+		length: 60px
+	}
+	.modal-content{
+		background-image: url("https://previews.123rf.com/images/sqback/sqback1110/sqback111000024/10932208-memo-notes-with-paper-clip-Stock-Photo.jpg")
+	}
+	.modal-header{
+		background-color: rgb(204, 197, 197)
+	}
+	
+	
+</style>
 <body>
 	
 		<div class="container">
 			<nav class="navbar navbar-default">
 			    <div class="navbar-header">
-					<a class="navbar-brand" href="#">
-						<img src="logo.jpg">
+					<a class="navbar-brand" href="/scrape">
+						<img src="https://hd-report.com/wp-content/uploads/2018/03/npr-one-primary-app-logo.png">
 					</a>
 					<h2 class="navbar-text" >Welcome to {{title}} </h2>
-					<a href="/scrape" class="navbar-link"><button type="button" class="btn btn-default btn-info navbar-btn navbar-right">News update <span id="cloud" class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span></button></a>
-				
+					<a href="/scrape" class="navbar-link"><button type="button" style="margin: 10px" class="btn btn-default btn-primary navbar-btn navbar-right">News update <span id="cloud" class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span></button></a>
+				    <a href="/saved" class="navbar-link"><button type="button" style="margin: 10px" class="btn btn-default btn-info navbar-btn">Saved Articles </button></a>
 			      
 			    </div>
 			</nav>

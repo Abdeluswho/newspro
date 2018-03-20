@@ -54,27 +54,6 @@
   </div>
 </div>
 
-{{!-- *********
-<div class="modal" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="basicModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Basic Modal </h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <h3>Modal Body</h3>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
- --}}
 
  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
@@ -88,7 +67,7 @@ $(document).on("click", "#modalbutton", function() {
  
   // Save the id from the button tag
    thisId = $(this).attr("data-id");
-  $("#articleID").text(thisId);
+  
   // Now make an ajax call for the Article
   $.ajax({
     method: "GET",
@@ -96,15 +75,17 @@ $(document).on("click", "#modalbutton", function() {
   })
     // With that done, add the note information to the page
     .done(function(data) {
-      console.log(data);
+      console.log("The Article being Edited ", data);
       // Placeholder for notes
+      $("#articleID").text(data.headline);
       $("#notes").append("<p id='actualnotes'></p>");
         if (data.note) {
+          $("#actualnotes").append(`<h4 style="text: bold">Saved notes - </h4>`)
         $("#actualnotes").append("<ul id='notelist'>");
           for (var i = 0; i < data.note.length; i++) {
             $('#notelist').append("<li id='" + data.note[i]._id + "'>" + data.note[i].body + " " +
-            "<button data-id='" + data.note[i]._id +
-            "' id='deletenote'>X</button></li>");
+            "<button class='btn btn-danger' data-id='" + data.note[i]._id +
+            "' id='deletenote'><span aria-hidden='true'>&times;</span></button></li>");
           }
         $('#actualnotes').append("</ul>");
       } else {
@@ -118,7 +99,7 @@ $(document).on("click", "#modalbutton", function() {
       $("#notes").append('<form><div class="form-group"><label for="comment">Note:</label>'+
                 '<textarea class="form-control" rows="5"  id="bodyinput" placeholder="Write Note Here"></textarea></div>');
       // A button to submit a new note, with the id of the article saved to it
-      $("#notes").append("<button class='btn btn-primary' type='submit' data-id='" + data._id + "' id='savenote'>Save Note</button></form>");
+      $("#notes").append("<button class='btn btn-success' type='submit' data-id='" + data._id + "' id='savenote'>Save Note</button></form>");
     });
 });
 // When you click the savenote button
@@ -141,12 +122,13 @@ $(document).on("click", "#savenote", function() {
       body: obj
     },
     success: function(data) {
-        console.log(data);
+        
       $("#notelist").empty();
-      //for (var i = 0; i < data.notes.length; i++) {
-      //  $("#notelist").append("<li id='" + data.notes[i]._id + "'>" + data.notes[i].body + " " + "<button data-id='" + data.notes[i]._id +
-      //  "' id='deletenote'>X</button></li>");
-     // }
+      for (var i = 0; i < data.note.length; i++) {
+            $('#notelist').append("<li id='" + data.note[i]._id + "'>" + data.note[i].body + " " +
+            "<button class='btn btn-danger' data-id='" + data.note[i]._id +
+            "' id='deletenote'><span aria-hidden='true'>&times;</span></button></li>");
+          }
     }
   })
     // With that done
