@@ -141,6 +141,7 @@ $(document).on("click", "#deletenote", function() {
   // Grab the id associated with the note
   var thisId = $(this).attr("data-id");
   // Run a POST request to delete the note
+  
   $.ajax({
     method: "GET",
     url: "/notes/" + thisId,
