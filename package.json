@@ -24,10 +24,10 @@
     "express": "^4.16.2",
     "express-handlebars": "^3.0.0",
     "hoek": "^5.0.3",
-    "mongoose": "^5.0.9",
-    "morgan": "^1.9.0",
+    "mongoose": "^5.4.11",
+    "morgan": "^1.9.1",
     "path": "^0.12.7",
     "pug": "^2.0.1",
-    "request": "^2.83.0"
+    "request": "^2.88.0"
   }
 }
